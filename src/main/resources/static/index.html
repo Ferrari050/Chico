@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChicoCerveja | Gestão artesanal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="brand" href="#" aria-label="ChicoCerveja início">
+      <span class="brand-mark">C</span>
+      <span><strong>Chico</strong><small>CERVEJARIA ARTESANAL</small></span>
+    </a>
+    <div class="side-label">GERENCIAMENTO</div>
+    <nav class="nav-menu">
+      <button class="nav-link active" data-page="estoque"><span class="nav-icon">▦</span>Estoque</button>
+      <button class="nav-link" data-page="receitas"><span class="nav-icon">♧</span>Receitas</button>
+      <button class="nav-link" data-page="producao"><span class="nav-icon">◷</span>Produção</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="brewery-stamp">✦</div>
+      <p>Feito com cuidado.<br><strong>Produzido em pequenos lotes.</strong></p>
+      <span class="version">PROTÓTIPO • V1.0</span>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div class="mobile-brand"><span class="brand-mark">C</span><strong>ChicoCerveja</strong></div>
+      <div class="breadcrumb"><span>ChicoCerveja</span><span class="crumb-sep">/</span><strong id="crumb-current">Estoque</strong></div>
+      <div class="topbar-right"><span class="demo-pill"><i></i> Dados de demonstração</span><div class="avatar">V</div></div>
+    </header>
+
+    <section class="page active" id="page-estoque">
+      <div class="page-heading">
+        <div><div class="eyebrow">VISÃO GERAL</div><h1>Controle de estoque</h1><p class="subtitle">Acompanhe seus insumos e mantenha cada lote sob controle.</p></div>
+        <button class="btn btn-primary" id="open-stock-modal"><span>＋</span> Adicionar item</button>
+      </div>
+      <div class="stats-grid">
+        <article class="stat-card"><div class="stat-top"><span>Itens cadastrados</span><span class="stat-icon amber">▦</span></div><strong id="stat-items">0</strong><small>Ingredientes disponíveis</small></article>
+        <article class="stat-card"><div class="stat-top"><span>Quantidade em estoque</span><span class="stat-icon green">⚖</span></div><strong id="stat-quantity">0 <em>kg</em></strong><small>Soma das quantidades cadastradas</small></article>
+        <article class="stat-card"><div class="stat-top"><span>Movimentações</span><span class="stat-icon brown">↕</span></div><strong id="stat-movements">0</strong><small>Entradas e saídas registradas</small></article>
+      </div>
+      <div class="panel">
+        <div class="panel-heading">
+          <div><h2>Ingredientes em estoque</h2><p>Filtre por categoria ou pesquise um item.</p></div>
+          <div class="toolbar"><div class="search-box"><span>⌕</span><input id="stock-search" type="search" placeholder="Buscar ingrediente..."></div></div>
+        </div>
+        <div class="category-tabs" id="stock-tabs">
+          <button class="category-tab active" data-category="TODOS">Todos <span id="count-all">0</span></button>
+          <button class="category-tab" data-category="MALTE">Maltes</button>
+          <button class="category-tab" data-category="LUPULO">Lúpulos</button>
+          <button class="category-tab" data-category="LEVEDURA">Leveduras</button>
+          <button class="category-tab" data-category="OUTROS">Outros</button>
+        </div>
+        <div class="table-wrap">
+          <table><thead><tr><th>Ingrediente</th><th>Categoria</th><th>Marca</th><th>Quantidade</th><th>Cadastro</th><th class="right">Ações</th></tr></thead><tbody id="stock-table"></tbody></table>
+        </div>
+
+        <!-- Controles de Paginação do Estoque -->
+        <div class="pagination-controls" id="stock-pagination"></div>
+
+        <div class="table-footer"><span id="stock-result-count">0 itens</span><span>Quantidades exibidas em kg, salvo indicação contrária.</span></div>
+      </div>
+
+      <div class="panel movement-panel">
+        <div class="panel-heading">
+          <div>
+            <h2>Movimentações do estoque</h2>
+            <p>Histórico de entradas e saídas de insumos.</p>
+          </div>
+          <select id="movement-filter" class="select-control">
+            <option value="TODAS">Todas as movimentações</option>
+            <option value="ENTRADA">Entradas</option>
+            <option value="SAIDA">Saídas</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+            <tr>
+              <th>Data</th>
+              <th>Ingrediente</th>
+              <th>Tipo</th>
+              <th>Origem</th>
+              <th>Quantidade</th>
+            </tr>
+            </thead>
+            <tbody id="movement-table"></tbody>
+          </table>
+        </div>
+        <div class="empty-state hidden" id="movement-empty">Nenhuma movimentação encontrada para esse filtro.</div>
+
+        <!-- Controles de Paginação das Movimentações -->
+        <div class="pagination-controls" id="movement-pagination"></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-receitas">
+      <div class="page-heading"><div><div class="eyebrow">NOVA PRODUÇÃO</div><h1>Montar receita</h1><p class="subtitle">Defina o lote e os ingredientes que farão parte da sua cerveja.</p></div><span class="step-badge">01 <span>/</span> 02 · Dados e ingredientes</span></div>
+      <form id="recipe-form">
+        <div class="panel">
+          <div class="panel-heading"><div><h2>Informações gerais</h2><p>Identifique a produção que você deseja planejar.</p></div><span class="section-number">01</span></div>
+          <div class="form-grid">
+            <label class="field field-wide">Nome da cerveja / lote<input id="recipe-name" required maxlength="90" placeholder="Ex.: IPA da casa"></label>
+            <label class="field">Data prevista<input id="recipe-date" type="date" required></label>
+            <label class="field">Quantidade planejada (L)<div class="input-suffix"><input id="recipe-quantity" type="number" min="0.1" step="0.1" required placeholder="Ex.: 100"><span>litros</span></div></label>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-heading"><div><h2>Ingredientes da produção</h2><p>Escolha itens disponíveis no estoque e informe os parâmetros de uso.</p></div><span class="section-number">02</span></div>
+          <div class="ingredient-builder">
+            <div class="builder-filters"><label class="field">Categoria<select id="ingredient-category"><option value="TODOS">Todas as categorias</option><option value="MALTE">Malte</option><option value="LUPULO">Lúpulo</option><option value="LEVEDURA">Levedura</option><option value="OUTROS">Outros</option></select></label><label class="field">Ingrediente<select id="ingredient-select" required></select></label></div>
+            <div class="builder-fields">
+              <label class="field">Quantidade (kg)<input id="ingredient-amount" type="number" min="0.01" step="0.01" placeholder="Ex.: 12"></label>
+              <label class="field">Temperatura (°C)<input id="ingredient-temp" type="number" step="0.1" placeholder="Ex.: 65"></label>
+              <label class="field">Tempo (min)<input id="ingredient-time" type="number" min="0" step="1" placeholder="Ex.: 60"></label>
+              <button class="btn btn-secondary add-ingredient-btn" type="button" id="add-ingredient">＋ Adicionar</button>
+            </div>
+            <div class="stock-hint" id="ingredient-stock-hint">Selecione um ingrediente para consultar o saldo disponível.</div>
+          </div>
+          <div class="selected-heading"><h3>Ingredientes adicionados</h3><span id="selected-count">0 ingredientes</span></div>
+          <div id="recipe-ingredient-list" class="recipe-ingredient-list"><div class="empty-inline">Sua lista está vazia. Adicione os ingredientes acima.</div></div>
+          <div class="recipe-summary"><div><span>Ingredientes selecionados</span><strong id="recipe-total-items">0</strong></div><div><span>Quantidade total planejada</span><strong id="recipe-total-amount">0 kg</strong></div></div>
+        </div>
+        <div class="form-actions"><button type="reset" class="btn btn-ghost" id="reset-recipe">Limpar formulário</button><button type="submit" class="btn btn-primary">Salvar produção planejada <span>→</span></button></div>
+      </form>
+    </section>
+
+    <section class="page" id="page-producao">
+      <div class="page-heading"><div><div class="eyebrow">ACOMPANHAMENTO</div><h1>Produções</h1><p class="subtitle">Consulte os lotes planejados, em andamento e finalizados.</p></div><button class="btn btn-primary" data-go-page="receitas">＋ Nova produção</button></div>
+      <div class="production-toolbar"><div class="production-filters" id="production-filters"><button class="filter-chip active" data-status="TODOS">Todas <span id="prod-count-all">0</span></button><button class="filter-chip" data-status="PENDENTE">Pendentes</button><button class="filter-chip" data-status="EM_ANDAMENTO">Em andamento</button><button class="filter-chip" data-status="FINALIZADA">Finalizadas</button></div><div class="search-box"><span>⌕</span><input id="production-search" type="search" placeholder="Buscar produção..."></div></div>
+      <div class="production-grid" id="production-grid"></div>
+      <div class="empty-state hidden" id="production-empty"><span class="empty-illustration">♧</span><h3>Nenhuma produção por aqui</h3><p>Crie uma produção planejada na tela Receitas para começar.</p><button class="btn btn-primary" data-go-page="receitas">Criar produção</button></div>
+    </section>
+
+    <section class="page" id="page-detalhe">
+      <div class="page-heading detail-heading"><div><button class="back-link" id="back-to-productions">← Voltar para produções</button><div class="eyebrow">DETALHES DO LOTE</div><h1 id="detail-title">Produção</h1><p class="subtitle" id="detail-subtitle">Informações e ingredientes do lote.</p></div><span class="status-pill pending" id="detail-status">Pendente</span></div>
+      <div class="detail-stats" id="detail-stats"></div>
+      <div class="panel">
+        <div class="panel-heading"><div><h2>Ingredientes planejados</h2><p>Gerencie os insumos vinculados a esta produção.</p></div><button class="btn btn-secondary" id="detail-add-ingredient">＋ Adicionar ingrediente</button></div>
+        <div class="table-wrap"><table><thead><tr><th>Ingrediente</th><th>Quantidade</th><th>Temperatura</th><th>Tempo</th><th class="right">Ações</th></tr></thead><tbody id="detail-ingredients-table"></tbody></table></div>
+        <div class="empty-state hidden" id="detail-ingredients-empty">Nenhum ingrediente adicionado a esta produção.</div>
+      </div>
+      <div class="panel phase-panel"><div><h2>Fase da produção</h2><p>A fase é apenas um indicador para organização e acompanhamento do usuário.</p></div><label class="field phase-select-field">Fase atual<select id="detail-phase"><option value="PENDENTE">Pendente</option><option value="MOSTURACAO">Mosturação</option><option value="FERVURA">Fervura</option><option value="FERMENTACAO">Fermentação</option><option value="FINALIZADA">Finalizada</option></select></label></div>
+      <div class="detail-actions"><button class="btn btn-danger-outline" id="delete-production">Excluir produção</button><button class="btn btn-primary" id="save-phase">Salvar fase</button></div>
+    </section>
+
+    <footer class="footer"><span>© 2026 ChicoCerveja</span><span>Protótipo de interface · Dados fictícios para demonstração</span></footer>
+  </main>
+</div>
+
+<div class="modal-backdrop hidden" id="stock-modal-backdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="stock-modal-title">
+    <div class="modal-header"><div><div class="eyebrow">CONTROLE DE INSUMOS</div><h2 id="stock-modal-title">Adicionar item ao estoque</h2></div><button class="icon-button" data-close-modal aria-label="Fechar">×</button></div>
+    <form id="stock-form"><input type="hidden" id="stock-edit-id">
+      <label class="field">Nome do ingrediente<input id="stock-name" required placeholder="Ex.: Malte Pilsen"></label>
+      <div class="form-grid two-col"><label class="field">Categoria<select id="stock-category" required><option value="MALTE">Malte</option><option value="LUPULO">Lúpulo</option><option value="LEVEDURA">Levedura</option><option value="OUTROS">Outros</option></select></label><label class="field">Marca<input id="stock-brand" placeholder="Ex.: BestMalz"></label></div>
+      <div class="form-grid two-col"><label class="field">Quantidade (kg)<input id="stock-quantity" type="number" min="0.01" step="0.01" required placeholder="Ex.: 25"></label><label class="field">Data de cadastro<input id="stock-date" type="date" required></label></div>
+      <div class="modal-actions"><button type="button" class="btn btn-ghost" data-close-modal>Cancelar</button><button type="submit" class="btn btn-primary">Salvar item</button></div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-backdrop hidden" id="quantity-modal-backdrop">
+  <div class="modal modal-small" role="dialog" aria-modal="true" aria-labelledby="quantity-modal-title">
+    <div class="modal-header"><div><div class="eyebrow">MOVIMENTAÇÃO MANUAL</div><h2 id="quantity-modal-title">Ajustar quantidade</h2><p id="quantity-modal-item" class="modal-subtitle"></p></div><button class="icon-button" data-close-quantity>×</button></div>
+    <form id="quantity-form"><input type="hidden" id="quantity-item-id"><input type="hidden" id="quantity-kind">
+      <label class="field">Quantidade (kg)<input id="quantity-value" type="number" min="0.01" step="0.01" required placeholder="Informe a quantidade"></label>
+      <div class="quantity-note" id="quantity-note">A movimentação será registrada no histórico.</div>
+      <div class="modal-actions"><button type="button" class="btn btn-ghost" data-close-quantity>Cancelar</button><button type="submit" class="btn btn-primary">Confirmar</button></div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-backdrop hidden" id="detail-ingredient-modal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="detail-ingredient-modal-title">
+    <div class="modal-header"><div><div class="eyebrow">INGREDIENTES DO LOTE</div><h2 id="detail-ingredient-modal-title">Adicionar ingrediente</h2></div><button class="icon-button" data-close-detail-modal>×</button></div>
+    <form id="detail-ingredient-form"><label class="field">Ingrediente<select id="detail-ingredient-select" required></select></label><div class="form-grid"><label class="field">Quantidade (kg)<input id="detail-ingredient-amount" type="number" min="0.01" step="0.01" required></label><label class="field">Temperatura (°C)<input id="detail-ingredient-temp" type="number" step="0.1" required></label><label class="field">Tempo (min)<input id="detail-ingredient-time" type="number" min="0" step="1" required></label></div><p class="form-note" id="detail-ingredient-hint"></p><div class="modal-actions"><button type="button" class="btn btn-ghost" data-close-detail-modal>Cancelar</button><button class="btn btn-primary" type="submit">Adicionar à produção</button></div></form>
+  </div>
+</div>
+<div class="toast-region" id="toast-region" aria-live="polite"></div>
+<script src="app.js"></script>
+</body>
+</html>
